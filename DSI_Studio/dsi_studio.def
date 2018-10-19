@@ -1,0 +1,44 @@
+BootStrap: docker
+From: ubuntu:14.04
+
+%labels
+    Architecture x86_64
+
+%post
+    apt-get install -y software-properties-common
+    add-apt-repository ppa:ubuntu-toolchain-r/test
+    apt-get update
+    apt-get install -y gcc-5 g++-5
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
+
+    apt-get install -y qt5-qmake qt5-default \
+        libboost-all-dev \
+        zlib1g zlib1g-dev libqt5opengl5-dev \
+        git unzip make wget dbus
+
+    dbus-uuidgen > /etc/machine-id
+
+    mkdir /dsistudio
+    cd /dsistudio
+
+    git clone https://github.com/frankyeh/DSI-Studio.git src
+    git clone https://github.com/frankyeh/TIPL.git src/image
+
+    mkdir build
+    cd build
+
+    qmake ../src && make
+    cd ..
+
+    wget https://www.dropbox.com/s/ew3rv0jrqqny2dq/dsi_studio_64.zip?dl=1 -O dsi_studio_64.zip
+    unzip dsi_studio_64.zip
+
+    cd dsi_studio_64
+    find . -name '*.dll' -exec rm {} \;
+    rmdir iconengines imageformats platforms printsupport
+    rm dsi_studio.exe
+    cp ../build/dsi_studio .
+
+%runscript
+    exec /dsistudio/dsi_studio_64/dsi_studio "$@"
