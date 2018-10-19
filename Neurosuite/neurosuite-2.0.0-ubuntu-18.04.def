@@ -1,0 +1,28 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%labels
+ Maintainer Ben Evans b.evans@yale.edu
+ Software Neurosuite
+ Homepage http://neurosuite.sourceforge.net/
+
+%post
+ apt-get update
+ apt-get -y install wget 
+ packages="libklustersshared_2.0.0 klusters_2.0.1 neuroscope_2.0.0 ndmanager_2.0.0"
+ psuffix="-bionic_amd64.deb"
+ for package in $packages;
+ do
+    wget http://sourceforge.net/projects/neurosuite/files/ubuntu/${package}${psuffix}/download -O /tmp/${package}${psuffix}
+    apt -y install /tmp/${package}${psuffix}
+    rm /tmp/${package}${psuffix}
+ done
+
+ # because naming schemes were meant to be broken!
+ wget http://sourceforge.net/projects/neurosuite/files/ubuntu/ndmanager-plugins_1.4.14-bionic2_amd64.deb/download -O /tmp/ndmanager-plugins_1.4.14-bionic2_amd64.deb
+ apt-get -y install /tmp/ndmanager-plugins_1.4.14-bionic2_amd64.deb
+ rm /tmp/ndmanager-plugins_1.4.14-bionic2_amd64.deb
+
+ wget http://sourceforge.net/projects/neurosuite/files/ubuntu/nphys-data_2.0.0-bionic_all.deb/download -O /tmp/nphys-data_2.0.0-bionic_all.deb
+ apt-get -y install /tmp/nphys-data_2.0.0-bionic_all.deb
+ rm /tmp/nphys-data_2.0.0-bionic_all.deb
