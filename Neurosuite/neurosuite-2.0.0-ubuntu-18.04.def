@@ -8,7 +8,7 @@ From: ubuntu:18.04
 
 %post
  apt-get update
- apt-get -y install wget 
+ apt-get -y install wget build-essential
  packages="libklustersshared_2.0.0 klusters_2.0.1 neuroscope_2.0.0 ndmanager_2.0.0"
  psuffix="-bionic_amd64.deb"
  for package in $packages;
@@ -26,3 +26,10 @@ From: ubuntu:18.04
  wget http://sourceforge.net/projects/neurosuite/files/ubuntu/nphys-data_2.0.0-bionic_all.deb/download -O /tmp/nphys-data_2.0.0-bionic_all.deb
  apt-get -y install /tmp/nphys-data_2.0.0-bionic_all.deb
  rm /tmp/nphys-data_2.0.0-bionic_all.deb
+
+ wget https://sourceforge.net/projects/klustakwik/files/klustakwik/KlustaKwik-2.0.1.tar.bz2/download -O /tmp/KlustaKwik-2.0.1.tar.bz2
+ tar xf /tmp/KlustaKwik-2.0.1.tar.bz2 && cd KlustaKwik-2.0.1
+ make
+ cp KlustaKwik /usr/local/bin/KlustaKwik
+ cd .. && rm -rf KlustaKwik-2.0.1
+
